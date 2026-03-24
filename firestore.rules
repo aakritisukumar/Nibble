@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      // Profile and food entries: user can read/write their own
+      match /profile/{doc} {
+        allow read, write: if request.auth.uid == uid;
+      }
+      match /food_entries/{entryId} {
+        allow read, write: if request.auth.uid == uid;
+      }
+
+      // Usage counters: user can READ (to show calls remaining in UI),
+      // but NEVER write — only the Cloud Function (Admin SDK) writes here.
+      match /usage/{doc} {
+        allow read: if request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+  }
+}
