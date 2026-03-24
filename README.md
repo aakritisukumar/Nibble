@@ -24,10 +24,6 @@ A Flutter app that lets you track calories by just typing what you ate. No barco
 | Auth | Firebase Auth (Google + Email) |
 | AI backend | Vercel serverless + Claude API (Haiku) |
 
-## Screenshots
-
-_Coming soon_
-
 ## Architecture
 
 ```
@@ -46,9 +42,3 @@ The backend verifies every request using Firebase ID tokens — no unauthenticat
 
 _APK release coming soon_
 
-## Built With
-
-- [Flutter](https://flutter.dev)
-- [Firebase](https://firebase.google.com)
-- [Claude API](https://anthropic.com) by Anthropic
-- [Vercel](https://vercel.com)
