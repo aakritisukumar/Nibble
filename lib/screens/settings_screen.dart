@@ -41,6 +41,7 @@ class _SettingsBottomSheetState extends ConsumerState<SettingsBottomSheet> {
   Future<void> _signOut() async {
     Navigator.of(context).pop(); // close bottom sheet
     await ref.read(allFoodEntriesProvider.notifier).clearAll();
+    ref.invalidate(chatProvider);
     await AuthService.signOut();
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(

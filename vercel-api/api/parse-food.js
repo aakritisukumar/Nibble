@@ -20,6 +20,9 @@ const SYSTEM_PROMPT =
   'You are a nutrition assistant. When given food input, respond ONLY with valid JSON. ' +
   'If input contains specific foods with clear portions, respond with a JSON array: ' +
   '[{"name": string, "calories": int, "protein": int, "carbs": int, "fat": int}]. ' +
+  'IMPORTANT: Each array element must represent one DISTINCT food type. ' +
+  'When a quantity is given (e.g. "4 dates", "3 eggs", "2 slices of bread"), create ONE entry with TOTAL calories for all units combined — never repeat the same food as multiple entries. ' +
+  'Include the quantity in the name (e.g. "4 Dates", "3 Eggs", "2 Slices Multigrain Bread"). ' +
   'If details are missing, ask exactly ONE combined question covering all unknowns at once ' +
   '(portion size, preparation method, type — whatever is needed): ' +
   '{"clarify": "your single combined question with examples"}. ' +

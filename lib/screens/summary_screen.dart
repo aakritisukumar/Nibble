@@ -367,7 +367,7 @@ class _HistoryRow extends ConsumerWidget {
 
 // ── Nutrition Dialog ───────────────────────────────────────────────────────────
 
-class NutritionDialog extends StatelessWidget {
+class NutritionDialog extends StatefulWidget {
   final List<FoodEntry> entries;
   final String dateKey;
   final int goal;
@@ -381,22 +381,30 @@ class NutritionDialog extends StatelessWidget {
     this.labelOverride,
   });
 
+  @override
+  State<NutritionDialog> createState() => _NutritionDialogState();
+}
+
+class _NutritionDialogState extends State<NutritionDialog> {
+  bool _showAll = false;
+
   String _formatTitle() {
-    if (labelOverride != null) return labelOverride!;
-    final parts = dateKey.split('-');
-    if (parts.length != 3) return dateKey;
+    if (widget.labelOverride != null) return widget.labelOverride!;
+    final parts = widget.dateKey.split('-');
+    if (parts.length != 3) return widget.dateKey;
     final dt = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
     return DateFormat('EEEE, MMM d').format(dt);
   }
 
   @override
   Widget build(BuildContext context) {
+    final entries = widget.entries;
     final totalCals = entries.fold(0, (s, e) => s + e.calories);
     final totalCarbs = entries.fold(0, (s, e) => s + e.carbs);
     final totalProtein = entries.fold(0, (s, e) => s + e.protein);
     final totalFat = entries.fold(0, (s, e) => s + e.fat);
-    final progress = (totalCals / goal).clamp(0.0, 1.0);
-    final isOverGoal = totalCals > goal;
+    final progress = (totalCals / widget.goal).clamp(0.0, 1.0);
+    final isOverGoal = totalCals > widget.goal;
     final pct = (progress * 100).round();
 
     return Dialog(
@@ -416,7 +424,7 @@ class NutritionDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '$totalCals / $goal kcal',
+                  '$totalCals / ${widget.goal} kcal',
                   style: AppTextStyles.body(
                     color: isOverGoal ? AppColors.errorRed : AppColors.darkGray,
                   ).copyWith(fontWeight: FontWeight.w600),
@@ -463,7 +471,7 @@ class NutritionDialog extends StatelessWidget {
             if (entries.isNotEmpty) ...[
               Text('Items logged', style: AppTextStyles.label()),
               const SizedBox(height: AppSpacing.sm),
-              ...entries.take(3).map(
+              ...(_showAll ? entries : entries.take(3)).map(
                 (e) => Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Row(
@@ -485,10 +493,16 @@ class NutritionDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              if (entries.length > 3)
-                Padding(
-                  padding: const EdgeInsets.only(top: 2),
-                  child: Text('+ ${entries.length - 3} more', style: AppTextStyles.caption()),
+              if (entries.length > 3 && !_showAll)
+                GestureDetector(
+                  onTap: () => setState(() => _showAll = true),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      '+ ${entries.length - 3} more',
+                      style: AppTextStyles.caption(color: AppColors.coral),
+                    ),
+                  ),
                 ),
             ],
 
